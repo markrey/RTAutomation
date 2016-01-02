@@ -62,7 +62,7 @@ class InsteonDriver;
 #define RTINSTEONSERVER_TOPICCONFIG_DESC    "Configure MQTT topics"
 
 #define RTINSTEONSERVER_LOCATIONCONFIG_NAME    "locationConfig"
-#define RTINSTEONSERVER_LOCATIONCONFIG_DESC    "Configure lattitude and longitude"
+#define RTINSTEONSERVER_LOCATIONCONFIG_DESC    "Configure latitude and longitude"
 
 class RTInsteonServer : public MainConsole
 {
