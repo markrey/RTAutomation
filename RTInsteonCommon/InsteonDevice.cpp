@@ -50,8 +50,10 @@ static DEVICEMAP deviceMap[] = {
     {0x01, 0x1c, "KeypadLinc dimmer (2486DWH6)"},
     {0x01, 0x1d, "SwitchLinc dimmer high wattage (2476DH)"},
     {0x01, 0x1e, "ICON switch dimmer (2476DB)"},
+    {0x01, 0x20, "SwitchLinc dimmer (2477D)"},
 
     {0x02, 0x09, "ApplianceLinc 3-pin (2456S3)"},
+    {0x02, 0x2a, "SwitchLinc relay (2477S)"},
     {0x02, 0x55, "On/off module (2635-222)"},
 
     {0x07, 0x00, "IOLinc (2450)"},
