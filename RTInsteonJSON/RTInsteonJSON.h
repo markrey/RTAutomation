@@ -36,7 +36,7 @@
 #define RTINSTEON_PARAMS_DEVICEID       "MQTTDeviceID"
 #define RTINSTEON_PARAMS_SERVERID       "MQTServerID"
 
-//  Topic settings keys
+//  RTInsteonServer topic settings keys
 
 #define RTINSTEON_PARAMS_TOPICGROUP     "topicGroup"
 #define RTINSTEON_PARAMS_STATUSTOPIC    "statusTopic"

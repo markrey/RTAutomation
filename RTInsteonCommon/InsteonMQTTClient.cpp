@@ -108,7 +108,15 @@ void InsteonMQTTClient::stopModule()
 
     if (m_connected) {
         dumpClient();
+
+        // wait for disconnect
+
+        qint64 start = QDateTime::currentMSecsSinceEpoch();
+
+        while (!m_disconnected && (QDateTime::currentMSecsSinceEpoch() - start) < 1000)
+            m_thread->yieldCurrentThread();
     }
+    MQTTAsync_destroy(&m_client);
     m_connected = false;
     m_connectInProgress = false;
     m_subTopics.clear();
@@ -260,6 +268,7 @@ void InsteonMQTTClient::onDisconnect()
 {
     QMutexLocker lock(&m_lock);
     m_disconnected = true;
+    m_disconnectInProgress = false;
     RTInsteonLog::logInfo(TAG, "Disconnect complete");
 }
 
@@ -306,6 +315,6 @@ void InsteonMQTTClient::publish(const QString &topic, const QJsonObject json)
     QByteArray data;
     QBuffer buffer(&data);
     buffer.open(QIODevice::WriteOnly);
-    buffer.write(QJsonDocument(json).toJson());
+    buffer.write(QJsonDocument(json).toJson(QJsonDocument::Compact));
     MQTTAsync_send(m_client, qPrintable(topic), data.length(), data.data(), 0, 0, 0);
 }

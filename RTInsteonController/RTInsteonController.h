@@ -80,8 +80,8 @@ private:
     QStatusBar *m_statusBar;
     QToolBar *m_toolBar;
 
-    QMap<int, InsteonDevice> m_map;                         // map from deviceID to device object
-    QMap<int, int>m_gridMap;                                // map from deviceID to display row
+    QMap<int, InsteonDevice> m_insteonMap;                  // map from deviceID to device object
+    QMap<int, int>m_insteonGridMap;                         // map from deviceID to display row
 
     bool m_tapSeen;
 };

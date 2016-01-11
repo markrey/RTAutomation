@@ -26,15 +26,15 @@ INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
 HEADERS += $$PWD/RTInsteonController.h \
-        $$PWD/ControllerClient.h \
-        $$PWD/MainTable.h \
-        $$PWD/SetInsteonLevelDlg.h \
-    $$PWD/ConfigureDlg.h
+    $$PWD/ControllerClient.h \
+    $$PWD/MainTable.h \
+    $$PWD/SetInsteonLevelDlg.h \
+    $$PWD/ConfigureDlg.h \
 
 SOURCES += $$PWD/main.cpp \
     $$PWD/RTInsteonController.cpp \
     $$PWD/ControllerClient.cpp \
-        $$PWD/MainTable.cpp \
-        $$PWD/SetInsteonLevelDlg.cpp \
-    $$PWD/ConfigureDlg.cpp
+    $$PWD/MainTable.cpp \
+    $$PWD/SetInsteonLevelDlg.cpp \
+    $$PWD/ConfigureDlg.cpp \
 

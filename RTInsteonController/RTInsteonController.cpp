@@ -65,6 +65,7 @@ void RTInsteonController::closeEvent(QCloseEvent *)
 {
     if (m_client) {
         m_client->exitThread();
+        m_client->thread()->wait(2000);
         m_client = NULL;
     }
 
@@ -104,7 +105,7 @@ void RTInsteonController::newUpdate(QJsonObject update)
         if (!idev.read(params))
             continue;
 
-        if (!m_map.contains(idev.deviceID)) {
+        if (!m_insteonMap.contains(idev.deviceID)) {
             int row = m_table->rowCount();
             m_table->insertRow(row);
             m_table->setRowHeight(row, MAINTABLE_ROW_HEIGHT);
@@ -119,13 +120,13 @@ void RTInsteonController::newUpdate(QJsonObject update)
             pb->setAttribute(Qt::WA_TransparentForMouseEvents, true);
             m_table->setCellWidget(row, 1, pb);
 
-            m_map.insert(idev.deviceID, idev);
-            m_gridMap.insert(idev.deviceID, row);
+            m_insteonMap.insert(idev.deviceID, idev);
+            m_insteonGridMap.insert(idev.deviceID, row);
         } else {
-            m_map.insert(idev.deviceID, idev);
+            m_insteonMap.insert(idev.deviceID, idev);
         }
 
-        int gridSlot = m_gridMap.value(idev.deviceID);
+        int gridSlot = m_insteonGridMap.value(idev.deviceID);
         ((QLabel *)m_table->cellWidget(gridSlot, 0))->setText(idev.name);
         ((QProgressBar *)m_table->cellWidget(gridSlot, 1))->setValue(idev.currentLevel);
         m_table->update();
@@ -188,7 +189,7 @@ void RTInsteonController::cellClicked(int row, int /* col */)
     SetInsteonLevelDlg dlg(this, name, level);
 
     if (dlg.exec() == QDialog::Accepted) {
-        foreach(InsteonDevice idev, m_map) {
+        foreach(InsteonDevice idev, m_insteonMap) {
             if (idev.name == name) {
                 QJsonArray jsa;
                 QJsonObject jso;
@@ -250,7 +251,7 @@ void RTInsteonController::onConfigure()
         emit clientRestart();
         while (m_table->rowCount() > 0)
             m_table->removeRow(0);
-        m_gridMap.clear();
-        m_map.clear();
+        m_insteonGridMap.clear();
+        m_insteonMap.clear();
     }
 }
