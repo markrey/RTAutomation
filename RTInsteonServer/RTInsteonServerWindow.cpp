@@ -67,45 +67,45 @@ RTInsteonServerWindow::RTInsteonServerWindow() : MainDialog()
     addStandardDialogs();
 
     TopicConfig *topicConfig = new TopicConfig();
-    RTInsteonJSON::addConfigDialog(topicConfig);
+    RTAutomationJSON::addConfigDialog(topicConfig);
 
     LocationConfig *locationConfig = new LocationConfig();
-    RTInsteonJSON::addConfigDialog(locationConfig);
+    RTAutomationJSON::addConfigDialog(locationConfig);
 
     SerialDlg *serialDlg = new SerialDlg();
     connect(serialDlg, SIGNAL(newPortName(QString)), m_insteonDriver, SLOT(newPortName(QString)));
-    RTInsteonJSON::addConfigDialog(serialDlg);
+    RTAutomationJSON::addConfigDialog(serialDlg);
 
     DeviceConfig *deviceConfig = new DeviceConfig(m_insteonDriver);
     connect(deviceConfig, SIGNAL(addDevice(InsteonDevice)), m_insteonDriver, SLOT(addDevice(InsteonDevice)));
     connect(deviceConfig, SIGNAL(removeDevice(int)), m_insteonDriver, SLOT(removeDevice(int)));
-    RTInsteonJSON::addToDialogList(deviceConfig);
+    RTAutomationJSON::addToDialogList(deviceConfig);
 
     TimerConfig *timerConfig = new TimerConfig(m_insteonDriver);
     connect(timerConfig, SIGNAL(updateTimer(InsteonTimer)), m_insteonDriver, SLOT(updateTimer(InsteonTimer)));
     connect(timerConfig, SIGNAL(removeTimer(QString)), m_insteonDriver, SLOT(removeTimer(QString)));
-    RTInsteonJSON::addToDialogList(timerConfig);
+    RTAutomationJSON::addToDialogList(timerConfig);
 
     AddDevice *addDevice = new AddDevice(m_insteonDriver);
     connect(addDevice, SIGNAL(addDevice(InsteonDevice)), m_insteonDriver, SLOT(addDevice(InsteonDevice)));
-    RTInsteonJSON::addToDialogList(addDevice);
+    RTAutomationJSON::addToDialogList(addDevice);
 
     AddTimer *addTimer = new AddTimer(m_insteonDriver);
     connect(addTimer, SIGNAL(addTimer(InsteonTimer)), m_insteonDriver, SLOT(addTimer(InsteonTimer)));
-    RTInsteonJSON::addToDialogList(addTimer);
+    RTAutomationJSON::addToDialogList(addTimer);
 
     DeviceStatus *deviceStatus = new DeviceStatus(m_insteonDriver);
-    RTInsteonJSON::addInfoDialog(deviceStatus);
+    RTAutomationJSON::addInfoDialog(deviceStatus);
 
     TimerStatus *timerStatus = new TimerStatus(m_insteonDriver);
-    RTInsteonJSON::addInfoDialog(timerStatus);
+    RTAutomationJSON::addInfoDialog(timerStatus);
 
     ControlledDevices *controlledDevices = new ControlledDevices(m_insteonDriver, timerConfig);
-    RTInsteonJSON::addToDialogList(controlledDevices);
+    RTAutomationJSON::addToDialogList(controlledDevices);
 
     EditControlled *editControlled = new EditControlled(m_insteonDriver, timerConfig);
     connect(editControlled, SIGNAL(updateTimer(InsteonTimer)), m_insteonDriver, SLOT(updateTimer(InsteonTimer)));
-    RTInsteonJSON::addToDialogList(editControlled);
+    RTAutomationJSON::addToDialogList(editControlled);
 
     startServices();
 }

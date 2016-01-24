@@ -51,7 +51,7 @@ UI_DIR += GeneratedFiles
 RCC_DIR += GeneratedFiles
 
 include(RTInsteonServer.pri)
-include(../RTInsteonJSON/RTInsteonJSON.pri)
-include(../RTInsteonCommon/RTInsteonCommon.pri)
+include(../RTAutomationJSON/RTAutomationJSON.pri)
+include(../RTAutomationCommon/RTAutomationCommon.pri)
 include(../qextserialport/src/qextserialport.pri)
 

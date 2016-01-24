@@ -30,12 +30,12 @@
 
 #include "InsteonServerClient.h"
 #include "InsteonDevice.h"
-#include "RTInsteonLog.h"
+#include "RTAutomationLog.h"
 #include "RTInsteonServer.h"
 
 #define TAG "InsteonServerClient"
 
-InsteonServerClient::InsteonServerClient(QObject *parent) : InsteonMQTTClient(parent)
+InsteonServerClient::InsteonServerClient(QObject *parent) : RTAutomationMQTTClient(parent)
 {
 }
 
@@ -43,13 +43,13 @@ void InsteonServerClient::clientInit()
 {
     QSettings settings;
 
-    QString deviceID = settings.value(RTINSTEON_PARAMS_DEVICEID).toString();
+    QString deviceID = settings.value(RTAUTOMATION_PARAMS_DEVICEID).toString();
 
-    settings.beginGroup(RTINSTEON_PARAMS_TOPICGROUP);
-    m_statusTopic = deviceID + "/" + settings.value(RTINSTEON_PARAMS_STATUSTOPIC).toString();
-    m_controlTopic = deviceID + "/" + settings.value(RTINSTEON_PARAMS_CONTROLTOPIC).toString();
-    m_managementCommandTopic = deviceID + "/" + settings.value(RTINSTEON_PARAMS_MANAGEMENTCOMMANDTOPIC).toString();
-    m_managementResponseTopic = deviceID + "/" + settings.value(RTINSTEON_PARAMS_MANAGEMENTRESPONSETOPIC).toString();
+    settings.beginGroup(RTAUTOMATION_PARAMS_TOPICGROUP);
+    m_statusTopic = deviceID + "/" + settings.value(RTAUTOMATION_PARAMS_STATUSTOPIC).toString();
+    m_controlTopic = deviceID + "/" + settings.value(RTAUTOMATION_PARAMS_CONTROLTOPIC).toString();
+    m_managementCommandTopic = deviceID + "/" + settings.value(RTAUTOMATION_PARAMS_MANAGEMENTCOMMANDTOPIC).toString();
+    m_managementResponseTopic = deviceID + "/" + settings.value(RTAUTOMATION_PARAMS_MANAGEMENTRESPONSETOPIC).toString();
     settings.endGroup();
 
     addSubTopic(m_controlTopic);
@@ -84,7 +84,7 @@ void InsteonServerClient::clientProcessReceivedMessage(const QString& topic, QJs
     } else if (topic == m_managementCommandTopic) {
         emit receiveCommandData(json);
     } else {
-        RTInsteonLog::logError(TAG, QString("Received unexpected message on topic %1").arg(topic));
+        RTAutomationLog::logError(TAG, QString("Received unexpected message on topic %1").arg(topic));
     }
 
 }

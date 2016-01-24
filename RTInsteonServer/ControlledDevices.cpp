@@ -27,7 +27,7 @@
 #include "TimerConfig.h"
 
 #include "RTInsteonServer.h"
-#include "RTInsteonLog.h"
+#include "RTAutomationLog.h"
 
 #define TAG "ControlledDevices"
 
@@ -51,7 +51,7 @@ void ControlledDevices::getDialog(QJsonObject& newDialog)
     QList<InsteonTimer> timerList = m_insteonDriver->getTimerList();
 
     if (m_index >= timerList.count()) {
-        RTInsteonLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_index));
+        RTAutomationLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_index));
         return;
     }
 

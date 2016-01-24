@@ -25,7 +25,7 @@
 #include "InsteonDefs.h"
 #include "InsteonDriver.h"
 #include "RTInsteonServer.h"
-#include "RTInsteonLog.h"
+#include "RTAutomationLog.h"
 
 #define TAG "TimerConfig"
 
@@ -63,44 +63,44 @@ bool TimerConfig::setVar(const QString& name, const QJsonObject& var)
     bool changed = false;
 
     if (name == "timeHour") {
-        if (m_timeHour != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_timeHour != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_timeHour = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_timeHour = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     } else if (name == "timeMinute") {
-        if (m_timeMinute != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_timeMinute != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_timeMinute = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_timeMinute = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     } else if (name == "dow") {
-        if (m_daysOfWeek != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_daysOfWeek != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_daysOfWeek = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_daysOfWeek = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     } else if (name == "mode") {
-        if (m_mode != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_mode != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_mode = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_mode = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "randomMode") {
-        if (m_randomMode != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool()) {
+        if (m_randomMode != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool()) {
             changed = true;
-            m_randomMode = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool();
+            m_randomMode = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool();
         }
     } else if (name == "deltaTime") {
-        if (m_deltaTime != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_deltaTime != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_deltaTime = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_deltaTime = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     } else if (name == "armed") {
-        if (m_armed != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool()) {
+        if (m_armed != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool()) {
             changed = true;
-            m_armed = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool();
+            m_armed = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool();
         }
     } else if (name == "delete") {
-        if (m_delete != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool()) {
+        if (m_delete != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool()) {
             changed = true;
-            m_delete = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool();
+            m_delete = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool();
         }
     }
     return changed;
@@ -109,12 +109,12 @@ bool TimerConfig::setVar(const QString& name, const QJsonObject& var)
 
 void TimerConfig::loadLocalData(const QJsonObject& param)
 {
-    m_index = param.value(RTINSTEONJSON_PARAM_INDEX).toInt();
+    m_index = param.value(RTAUTOMATIONJSON_PARAM_INDEX).toInt();
 
     QList<InsteonTimer> timerList = m_insteonDriver->getTimerList();
 
     if (m_index >= timerList.count()) {
-        RTInsteonLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_index));
+        RTAutomationLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_index));
         return;
     }
 
@@ -137,7 +137,7 @@ void TimerConfig::saveLocalData()
     QList<InsteonTimer> timerList = m_insteonDriver->getTimerList();
 
     if (m_index >= timerList.count()) {
-        RTInsteonLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_index));
+        RTAutomationLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_index));
         return;
     }
 

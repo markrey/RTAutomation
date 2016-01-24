@@ -36,24 +36,24 @@ bool TopicConfig::setVar(const QString& name, const QJsonObject& var)
     bool changed = false;
 
     if (name == "statusTopic") {
-        if (m_statusTopic != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_statusTopic != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_statusTopic = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_statusTopic = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "controlTopic") {
-        if (m_controlTopic != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_controlTopic != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_controlTopic = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_controlTopic = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "managementCommandTopic") {
-        if (m_managementCommandTopic != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_managementCommandTopic != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_managementCommandTopic = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_managementCommandTopic = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "managementResponseTopic") {
-        if (m_managementResponseTopic != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_managementResponseTopic != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_managementResponseTopic = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_managementResponseTopic = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     }
     return changed;
@@ -73,11 +73,11 @@ void TopicConfig::loadLocalData(const QJsonObject& /* param */)
 {
     QSettings settings;
 
-    settings.beginGroup(RTINSTEON_PARAMS_TOPICGROUP);
-    m_statusTopic = settings.value(RTINSTEON_PARAMS_STATUSTOPIC).toString();
-    m_controlTopic = settings.value(RTINSTEON_PARAMS_CONTROLTOPIC).toString();
-    m_managementCommandTopic = settings.value(RTINSTEON_PARAMS_MANAGEMENTCOMMANDTOPIC).toString();
-    m_managementResponseTopic = settings.value(RTINSTEON_PARAMS_MANAGEMENTRESPONSETOPIC).toString();
+    settings.beginGroup(RTAUTOMATION_PARAMS_TOPICGROUP);
+    m_statusTopic = settings.value(RTAUTOMATION_PARAMS_STATUSTOPIC).toString();
+    m_controlTopic = settings.value(RTAUTOMATION_PARAMS_CONTROLTOPIC).toString();
+    m_managementCommandTopic = settings.value(RTAUTOMATION_PARAMS_MANAGEMENTCOMMANDTOPIC).toString();
+    m_managementResponseTopic = settings.value(RTAUTOMATION_PARAMS_MANAGEMENTRESPONSETOPIC).toString();
     settings.endGroup();
 }
 
@@ -85,11 +85,11 @@ void TopicConfig::saveLocalData()
 {
     QSettings settings;
 
-    settings.beginGroup(RTINSTEON_PARAMS_TOPICGROUP);
-    settings.setValue(RTINSTEON_PARAMS_STATUSTOPIC, m_statusTopic);
-    settings.setValue(RTINSTEON_PARAMS_CONTROLTOPIC, m_controlTopic);
-    settings.setValue(RTINSTEON_PARAMS_MANAGEMENTCOMMANDTOPIC, m_managementCommandTopic);
-    settings.setValue(RTINSTEON_PARAMS_MANAGEMENTRESPONSETOPIC, m_managementResponseTopic);
+    settings.beginGroup(RTAUTOMATION_PARAMS_TOPICGROUP);
+    settings.setValue(RTAUTOMATION_PARAMS_STATUSTOPIC, m_statusTopic);
+    settings.setValue(RTAUTOMATION_PARAMS_CONTROLTOPIC, m_controlTopic);
+    settings.setValue(RTAUTOMATION_PARAMS_MANAGEMENTCOMMANDTOPIC, m_managementCommandTopic);
+    settings.setValue(RTAUTOMATION_PARAMS_MANAGEMENTRESPONSETOPIC, m_managementResponseTopic);
     settings.endGroup();
 }
 

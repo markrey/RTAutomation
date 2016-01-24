@@ -24,7 +24,7 @@
 #include "InsteonDriver.h"
 #include "AddDevice.h"
 #include "RTInsteonServer.h"
-#include "RTInsteonJSONDefs.h"
+#include "RTAutomationJSONDefs.h"
 
 #define TAG "AddDevice"
 
@@ -52,29 +52,29 @@ bool AddDevice::setVar(const QString& name, const QJsonObject& var)
     bool changed = false;
 
     if (name == "type") {
-        if (m_type != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_type != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_type = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_type = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "name") {
-        if (m_name != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_name != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_name = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_name = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "group") {
-        if (m_group != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_group != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_group = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_group = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     } else if (name == "flags") {
-        if (m_flags != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_flags != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_flags = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_flags = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     } else if (name == "id") {
-        if (m_id != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_id != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_id = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_id = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     }
     return changed;

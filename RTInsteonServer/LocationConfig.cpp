@@ -37,14 +37,14 @@ bool LocationConfig::setVar(const QString& name, const QJsonObject& var)
     bool changed = false;
 
     if (name == "latitude") {
-        if (m_latitude != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_latitude != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_latitude = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_latitude = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "longitude") {
-        if (m_longitude != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_longitude != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_longitude = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_longitude = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     }
     return changed;

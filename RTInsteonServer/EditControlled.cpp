@@ -26,7 +26,7 @@
 #include "InsteonDriver.h"
 #include "RTInsteonServer.h"
 #include "TimerConfig.h"
-#include "RTInsteonLog.h"
+#include "RTAutomationLog.h"
 
 #define TAG "EditControlled"
 
@@ -58,14 +58,14 @@ bool EditControlled::setVar(const QString& name, const QJsonObject& var)
     bool changed = false;
 
     if (name == "level") {
-        if (m_level != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_level != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_level = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_level = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     } else if (name == "inUse") {
-        if (m_inUse != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool()) {
+        if (m_inUse != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool()) {
             changed = true;
-            m_inUse = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool();
+            m_inUse = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool();
         }
     }
     return changed;
@@ -76,21 +76,21 @@ void EditControlled::loadLocalData(const QJsonObject& param)
 {
     int dtIndex;
 
-    m_deviceIndex = param.value(RTINSTEONJSON_PARAM_INDEX).toInt();
+    m_deviceIndex = param.value(RTAUTOMATIONJSON_PARAM_INDEX).toInt();
     m_timerIndex = m_timerConfig->getCurrentIndex();
 
     QList<InsteonTimer> timerList = m_insteonDriver->getTimerList();
     QList<InsteonDevice> deviceList = m_insteonDriver->getDeviceList();
 
     if (m_timerIndex >= timerList.count()) {
-        RTInsteonLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_timerIndex));
+        RTAutomationLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_timerIndex));
         return;
     }
 
     InsteonTimer timer = timerList.at(m_timerIndex);
 
     if (m_deviceIndex >= deviceList.count()) {
-        RTInsteonLog::logError(TAG, QString("Device index %1 bigger than device table").arg(m_deviceIndex));
+        RTAutomationLog::logError(TAG, QString("Device index %1 bigger than device table").arg(m_deviceIndex));
         return;
     }
 
@@ -121,14 +121,14 @@ void EditControlled::saveLocalData()
     QList<InsteonDevice> deviceList = m_insteonDriver->getDeviceList();
 
     if (m_timerIndex >= timerList.count()) {
-        RTInsteonLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_timerIndex));
+        RTAutomationLog::logError(TAG, QString("Timer index %1 bigger than table").arg(m_timerIndex));
         return;
     }
 
     InsteonTimer timer = timerList.at(m_timerIndex);
 
     if (m_deviceIndex >= deviceList.count()) {
-        RTInsteonLog::logError(TAG, QString("Device index %1 bigger than device table").arg(m_deviceIndex));
+        RTAutomationLog::logError(TAG, QString("Device index %1 bigger than device table").arg(m_deviceIndex));
         return;
     }
 

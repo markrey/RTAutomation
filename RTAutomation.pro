@@ -27,9 +27,9 @@ TEMPLATE = subdirs
 
 macx {
 SUBDIRS = RTInsteonController \
-    RTInsteonManager
+    RTAutomationManager
 } else {
 SUBDIRS = RTInsteonController \
-    RTInsteonManager \
+    RTAutomationManager \
     RTInsteonServer
 }

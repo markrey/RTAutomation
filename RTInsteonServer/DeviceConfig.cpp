@@ -24,7 +24,7 @@
 #include "InsteonDriver.h"
 #include "DeviceConfig.h"
 #include "RTInsteonServer.h"
-#include "RTInsteonLog.h"
+#include "RTAutomationLog.h"
 
 #define TAG "DeviceConfig"
 
@@ -57,29 +57,29 @@ bool DeviceConfig::setVar(const QString& name, const QJsonObject& var)
     bool changed = false;
 
     if (name == "type") {
-        if (m_type != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_type != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_type = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_type = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "name") {
-        if (m_name != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_name != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_name = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_name = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "group") {
-        if (m_group != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_group != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_group = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_group = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     } else if (name == "flags") {
-        if (m_flags != (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt()) {
+        if (m_flags != (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt()) {
             changed = true;
-            m_flags = (unsigned int)var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toInt();
+            m_flags = (unsigned int)var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toInt();
         }
     } else if (name == "delete") {
-        if (m_delete != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool()) {
+        if (m_delete != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool()) {
             changed = true;
-            m_delete = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toBool();
+            m_delete = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toBool();
         }
     }
     return changed;
@@ -87,12 +87,12 @@ bool DeviceConfig::setVar(const QString& name, const QJsonObject& var)
 
 void DeviceConfig::loadLocalData(const QJsonObject& param)
 {
-    m_index = param.value(RTINSTEONJSON_PARAM_INDEX).toInt();
+    m_index = param.value(RTAUTOMATIONJSON_PARAM_INDEX).toInt();
 
     QList<InsteonDevice> deviceList = m_insteonDriver->getDeviceList();
 
     if (m_index >= deviceList.count()) {
-        RTInsteonLog::logError(TAG, QString("Device index %1 bigger than table").arg(m_index));
+        RTAutomationLog::logError(TAG, QString("Device index %1 bigger than table").arg(m_index));
         return;
     }
 
@@ -110,7 +110,7 @@ void DeviceConfig::saveLocalData()
     QList<InsteonDevice> deviceList = m_insteonDriver->getDeviceList();
 
     if (m_index >= deviceList.count()) {
-        RTInsteonLog::logError(TAG, QString("Device index %1 bigger than table").arg(m_index));
+        RTAutomationLog::logError(TAG, QString("Device index %1 bigger than table").arg(m_index));
         return;
     }
 

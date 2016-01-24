@@ -1,0 +1,14 @@
+body {
+  font-family:arial,sans-serif;
+}
+
+h1 {
+    text-align: center;
+}
+
+.Wt-auth-logged-in {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-size: 90%;
+}

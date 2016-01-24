@@ -23,12 +23,12 @@
 
 #include "ControllerClient.h"
 #include "RTInsteonController.h"
-#include "RTInsteonJSON.h"
-#include "RTInsteonLog.h"
+#include "RTAutomationJSON.h"
+#include "RTAutomationLog.h"
 
 #define TAG "ControllerClient"
 
-ControllerClient::ControllerClient() : InsteonMQTTClient(0)
+ControllerClient::ControllerClient() : RTAutomationMQTTClient(0)
 {
 
 }
@@ -36,14 +36,14 @@ void ControllerClient::clientInit()
 {
     QSettings settings;
 
-    QString serverID = settings.value(RTINSTEON_PARAMS_SERVERID).toString();
+    QString serverID = settings.value(RTAUTOMATION_PARAMS_SERVERID).toString();
 
-    settings.beginGroup(RTINSTEON_PARAMS_TOPICGROUP);
-    m_statusTopic = serverID + "/" + settings.value(RTINSTEON_PARAMS_STATUSTOPIC).toString();
-    m_controlTopic = serverID + "/" + settings.value(RTINSTEON_PARAMS_CONTROLTOPIC).toString();
+    settings.beginGroup(RTAUTOMATION_PARAMS_TOPICGROUP);
+    m_statusTopic = serverID + "/" + settings.value(RTAUTOMATION_PARAMS_STATUSTOPIC).toString();
+    m_controlTopic = serverID + "/" + settings.value(RTAUTOMATION_PARAMS_CONTROLTOPIC).toString();
     settings.endGroup();
 
-    addSubTopic(m_statusTopic);
+    lockedAddSubTopic(m_statusTopic);
 }
 
 void ControllerClient::clientStop()
@@ -60,7 +60,7 @@ void ControllerClient::clientProcessReceivedMessage(const QString& topic, QJsonO
     if (topic == m_statusTopic) {
         emit newUpdate(json);
     } else {
-        RTInsteonLog::logError(TAG, QString("Received unexpected message on topic %1").arg(topic));
+        RTAutomationLog::logError(TAG, QString("Received unexpected message on topic %1").arg(topic));
     }
 }
 

@@ -24,9 +24,9 @@
 #ifndef _INSTEONSERVERCLIENT_H
 #define _INSTEONSERVERCLIENT_H
 
-#include "InsteonMQTTClient.h"
+#include "RTAutomationMQTTClient.h"
 
-class InsteonServerClient : public InsteonMQTTClient
+class InsteonServerClient : public RTAutomationMQTTClient
 {
     Q_OBJECT
 

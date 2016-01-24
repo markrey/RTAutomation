@@ -22,8 +22,8 @@
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "RTInsteonController.h"
-#include "RTInsteonJSON.h"
-#include "RTInsteonArgs.h"
+#include "RTAutomationJSON.h"
+#include "RTAutomationArgs.h"
 
 #include <qapplication.h>
 
@@ -31,7 +31,7 @@ void presetDefaultSettings();
 
 int main(int argc, char *argv[])
 {
-    RTInsteonArgs::setAppName("RTInsteonController");
+    RTAutomationArgs::setAppName("RTInsteonController");
 
     QApplication a(argc, argv);
     QCoreApplication::setOrganizationName("richards-tech");
@@ -51,21 +51,21 @@ int main(int argc, char *argv[])
 void presetDefaultSettings()
 {
     QSettings settings;
-    if (!settings.contains(RTINSTEON_PARAMS_BROKERADDRESS))
-        settings.setValue(RTINSTEON_PARAMS_BROKERADDRESS, "tcp://localhost:1883");
-    if (!settings.contains(RTINSTEON_PARAMS_CLIENTID))
-        settings.setValue(RTINSTEON_PARAMS_CLIENTID, "rtinsteoncontroller");
-    if (!settings.contains(RTINSTEON_PARAMS_CLIENTSECRET))
-        settings.setValue(RTINSTEON_PARAMS_CLIENTSECRET, "rtinsteoncontroller");
-    if (!settings.contains(RTINSTEON_PARAMS_SERVERID))
-        settings.setValue(RTINSTEON_PARAMS_SERVERID, "rtinsteonserver");
+    if (!settings.contains(RTAUTOMATION_PARAMS_BROKERADDRESS))
+        settings.setValue(RTAUTOMATION_PARAMS_BROKERADDRESS, "tcp://localhost:1883");
+    if (!settings.contains(RTAUTOMATION_PARAMS_CLIENTID))
+        settings.setValue(RTAUTOMATION_PARAMS_CLIENTID, "rtinsteoncontroller");
+    if (!settings.contains(RTAUTOMATION_PARAMS_CLIENTSECRET))
+        settings.setValue(RTAUTOMATION_PARAMS_CLIENTSECRET, "rtinsteoncontroller");
+    if (!settings.contains(RTAUTOMATION_PARAMS_SERVERID))
+        settings.setValue(RTAUTOMATION_PARAMS_SERVERID, "rtinsteonserver");
 
-    settings.beginGroup(RTINSTEON_PARAMS_TOPICGROUP);
+    settings.beginGroup(RTAUTOMATION_PARAMS_TOPICGROUP);
 
-    if (!settings.contains(RTINSTEON_PARAMS_STATUSTOPIC))
-        settings.setValue(RTINSTEON_PARAMS_STATUSTOPIC, "status");
-    if (!settings.contains(RTINSTEON_PARAMS_CONTROLTOPIC))
-        settings.setValue(RTINSTEON_PARAMS_CONTROLTOPIC, "control");
+    if (!settings.contains(RTAUTOMATION_PARAMS_STATUSTOPIC))
+        settings.setValue(RTAUTOMATION_PARAMS_STATUSTOPIC, "status");
+    if (!settings.contains(RTAUTOMATION_PARAMS_CONTROLTOPIC))
+        settings.setValue(RTAUTOMATION_PARAMS_CONTROLTOPIC, "control");
 
     settings.endGroup();
 }

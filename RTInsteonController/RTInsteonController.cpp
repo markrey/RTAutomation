@@ -25,8 +25,8 @@
 #include "MainTable.h"
 #include "SetInsteonLevelDlg.h"
 #include "ConfigureDlg.h"
-#include "RTInsteonArgs.h"
-#include "RTInsteonJSON.h"
+#include "RTAutomationArgs.h"
+#include "RTAutomationJSON.h"
 
 #include <qheaderview.h>
 #include <qboxlayout.h>
@@ -56,7 +56,7 @@ RTInsteonController::RTInsteonController()
 
     m_client->resumeThread();
 
-    setWindowTitle(RTInsteonArgs::getAppName());
+    setWindowTitle(RTAutomationArgs::getAppName());
 
     m_tapSeen = false;
 }
@@ -82,8 +82,8 @@ void RTInsteonController::clientConnected()
 {
     QSettings settings;
 
-    m_brokerStatus->setText("Connected to " + settings.value(RTINSTEON_PARAMS_BROKERADDRESS).toString());
-    m_serverName->setText(QString("Using automation server: ") + settings.value(RTINSTEON_PARAMS_SERVERID).toString());
+    m_brokerStatus->setText("Connected to " + settings.value(RTAUTOMATION_PARAMS_BROKERADDRESS).toString());
+    m_serverName->setText(QString("Using automation server: ") + settings.value(RTAUTOMATION_PARAMS_SERVERID).toString());
 }
 
 void RTInsteonController::clientDisconnected()

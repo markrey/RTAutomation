@@ -64,5 +64,5 @@ UI_DIR += GeneratedFiles
 RCC_DIR += GeneratedFiles
 
 include(RTInsteonController.pri)
-include(../RTInsteonJSON/RTInsteonJSON.pri)
-include(../RTInsteonCommon/RTInsteonCommon.pri)
+include(../RTAutomationJSON/RTAutomationJSON.pri)
+include(../RTAutomationCommon/RTAutomationCommon.pri)

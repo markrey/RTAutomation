@@ -33,7 +33,7 @@
 #include "InsteonTimer.h"
 #include "InsteonDefs.h"
 
-#include "RTInsteonThread.h"
+#include "RTAutomationThread.h"
 
 //	Settings file keys
 
@@ -89,7 +89,7 @@
 #define	INSTEON_STATE_ACTIVE            4                   // ready for normal operation
 
 
-class InsteonDriver : public RTInsteonThread
+class InsteonDriver : public RTAutomationThread
 {
     Q_OBJECT
 

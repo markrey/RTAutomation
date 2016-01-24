@@ -26,7 +26,7 @@
 
 #include "ConfigureDlg.h"
 #include "RTInsteonController.h"
-#include "RTInsteonJSON.h"
+#include "RTAutomationJSON.h"
 
 ConfigureDlg::ConfigureDlg(QWidget *parent)
     : QDialog(parent, Qt::WindowCloseButtonHint | Qt::WindowTitleHint)
@@ -43,32 +43,32 @@ void ConfigureDlg::saveData()
 
     bool changed = false;
 
-    if (m_brokerAddress->text() != settings.value(RTINSTEON_PARAMS_BROKERADDRESS).toString()) {
+    if (m_brokerAddress->text() != settings.value(RTAUTOMATION_PARAMS_BROKERADDRESS).toString()) {
         changed = true;
-        settings.setValue(RTINSTEON_PARAMS_BROKERADDRESS, m_brokerAddress->text());
+        settings.setValue(RTAUTOMATION_PARAMS_BROKERADDRESS, m_brokerAddress->text());
     }
-    if (m_clientID->text() != settings.value(RTINSTEON_PARAMS_CLIENTID).toString()) {
+    if (m_clientID->text() != settings.value(RTAUTOMATION_PARAMS_CLIENTID).toString()) {
         changed = true;
-        settings.setValue(RTINSTEON_PARAMS_CLIENTID, m_clientID->text());
+        settings.setValue(RTAUTOMATION_PARAMS_CLIENTID, m_clientID->text());
     }
-    if (m_clientSecret->text() != settings.value(RTINSTEON_PARAMS_CLIENTSECRET).toString()) {
+    if (m_clientSecret->text() != settings.value(RTAUTOMATION_PARAMS_CLIENTSECRET).toString()) {
         changed = true;
-        settings.setValue(RTINSTEON_PARAMS_CLIENTSECRET, m_clientSecret->text());
+        settings.setValue(RTAUTOMATION_PARAMS_CLIENTSECRET, m_clientSecret->text());
     }
-    if (m_automationServerID->text() != settings.value(RTINSTEON_PARAMS_SERVERID).toString()) {
+    if (m_automationServerID->text() != settings.value(RTAUTOMATION_PARAMS_SERVERID).toString()) {
         changed = true;
-        settings.setValue(RTINSTEON_PARAMS_SERVERID, m_automationServerID->text());
+        settings.setValue(RTAUTOMATION_PARAMS_SERVERID, m_automationServerID->text());
     }
 
-    settings.beginGroup(RTINSTEON_PARAMS_TOPICGROUP);
+    settings.beginGroup(RTAUTOMATION_PARAMS_TOPICGROUP);
 
-    if (m_statusTopic->text() != settings.value(RTINSTEON_PARAMS_STATUSTOPIC).toString()) {
+    if (m_statusTopic->text() != settings.value(RTAUTOMATION_PARAMS_STATUSTOPIC).toString()) {
         changed = true;
-        settings.setValue(RTINSTEON_PARAMS_STATUSTOPIC, m_statusTopic->text());
+        settings.setValue(RTAUTOMATION_PARAMS_STATUSTOPIC, m_statusTopic->text());
     }
-    if (m_controlTopic->text() != settings.value(RTINSTEON_PARAMS_CONTROLTOPIC).toString()) {
+    if (m_controlTopic->text() != settings.value(RTAUTOMATION_PARAMS_CONTROLTOPIC).toString()) {
         changed = true;
-        settings.setValue(RTINSTEON_PARAMS_CONTROLTOPIC, m_controlTopic->text());
+        settings.setValue(RTAUTOMATION_PARAMS_CONTROLTOPIC, m_controlTopic->text());
     }
 
     settings.endGroup();
@@ -94,19 +94,19 @@ void ConfigureDlg::layoutWindow()
     formLayout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
 
     m_brokerAddress = new QLineEdit();
-    m_brokerAddress->setText(settings.value(RTINSTEON_PARAMS_BROKERADDRESS).toString());
+    m_brokerAddress->setText(settings.value(RTAUTOMATION_PARAMS_BROKERADDRESS).toString());
     m_brokerAddress->setToolTip("The MQTT broker address (e.g. tcp://localhost:1883");
     m_brokerAddress->setMinimumWidth(200);
     formLayout->addRow(tr("MQTT broker address:"), m_brokerAddress);
 
     m_clientID = new QLineEdit();
-    m_clientID->setText(settings.value(RTINSTEON_PARAMS_CLIENTID).toString());
+    m_clientID->setText(settings.value(RTAUTOMATION_PARAMS_CLIENTID).toString());
     m_clientID->setToolTip("The client ID is used to sign on to the NQTT broker");
     m_clientID->setMinimumWidth(200);
     formLayout->addRow(tr("MQTT client ID:"), m_clientID);
 
     m_clientSecret = new QLineEdit();
-    m_clientSecret->setText(settings.value(RTINSTEON_PARAMS_CLIENTSECRET).toString());
+    m_clientSecret->setText(settings.value(RTAUTOMATION_PARAMS_CLIENTSECRET).toString());
     m_clientSecret->setToolTip("The client secret may be used to sign on to the NQTT broker");
     m_clientSecret->setMinimumWidth(200);
     m_clientSecret->setEchoMode(QLineEdit::Password);
@@ -119,21 +119,21 @@ void ConfigureDlg::layoutWindow()
     formLayout->addRow(line);
 
     m_automationServerID = new QLineEdit();
-    m_automationServerID->setText(settings.value(RTINSTEON_PARAMS_SERVERID).toString());
+    m_automationServerID->setText(settings.value(RTAUTOMATION_PARAMS_SERVERID).toString());
     m_automationServerID->setToolTip("The device ID of the automation server");
     m_automationServerID->setMinimumWidth(200);
     formLayout->addRow(tr("Automation server ID:"), m_automationServerID);
 
-    settings.beginGroup(RTINSTEON_PARAMS_TOPICGROUP);
+    settings.beginGroup(RTAUTOMATION_PARAMS_TOPICGROUP);
 
     m_statusTopic = new QLineEdit();
-    m_statusTopic->setText(settings.value(RTINSTEON_PARAMS_STATUSTOPIC).toString());
+    m_statusTopic->setText(settings.value(RTAUTOMATION_PARAMS_STATUSTOPIC).toString());
     m_statusTopic->setToolTip("The topic to suscribe for status updates (e.g. status)");
     m_statusTopic->setMinimumWidth(200);
     formLayout->addRow(tr("Status topic (sub):"), m_statusTopic);
 
     m_controlTopic = new QLineEdit();
-    m_controlTopic->setText(settings.value(RTINSTEON_PARAMS_CONTROLTOPIC).toString());
+    m_controlTopic->setText(settings.value(RTAUTOMATION_PARAMS_CONTROLTOPIC).toString());
     m_controlTopic->setToolTip("The topic to publish for control operations (e.g. control)");
     m_controlTopic->setMinimumWidth(200);
     formLayout->addRow(tr("Control topic (pub):"), m_controlTopic);

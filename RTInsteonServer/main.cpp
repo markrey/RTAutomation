@@ -23,8 +23,8 @@
 
 #include "RTInsteonServer.h"
 #include "RTInsteonServerWindow.h"
-#include "RTInsteonArgs.h"
-#include "RTInsteonJSON.h"
+#include "RTAutomationArgs.h"
+#include "RTAutomationJSON.h"
 
 #include <qapplication.h>
 #include <qsettings.h>
@@ -35,8 +35,8 @@ void presetDefaultSettings();
 
 int main(int argc, char *argv[])
 {
-    RTInsteonArgs::setAppName("RTInsteonServer");
-    if (RTInsteonArgs::checkConsoleModeFlag(argc, argv))
+    RTAutomationArgs::setAppName("RTInsteonServer");
+    if (RTAutomationArgs::checkConsoleModeFlag(argc, argv))
         return runConsoleApp(argc, argv);
     else
         return runGuiApp(argc, argv);
@@ -65,7 +65,7 @@ int runConsoleApp(int argc, char **argv)
     QCoreApplication::setApplicationName("RTInsteonServer");
     presetDefaultSettings();
 
-    bool daemonMode = RTInsteonArgs::checkDaemonModeFlag(argc, argv);
+    bool daemonMode = RTAutomationArgs::checkDaemonModeFlag(argc, argv);
 
     RTInsteonServer console(&a, daemonMode);
 
@@ -75,25 +75,25 @@ int runConsoleApp(int argc, char **argv)
 void presetDefaultSettings()
 {
     QSettings settings;
-    if (!settings.contains(RTINSTEON_PARAMS_BROKERADDRESS))
-        settings.setValue(RTINSTEON_PARAMS_BROKERADDRESS, "tcp://localhost:1883");
-    if (!settings.contains(RTINSTEON_PARAMS_CLIENTID))
-        settings.setValue(RTINSTEON_PARAMS_CLIENTID, "rtinsteonserver");
-    if (!settings.contains(RTINSTEON_PARAMS_CLIENTSECRET))
-        settings.setValue(RTINSTEON_PARAMS_CLIENTSECRET, "rtinsteonserver");
-    if (!settings.contains(RTINSTEON_PARAMS_DEVICEID))
-        settings.setValue(RTINSTEON_PARAMS_DEVICEID, "rtinsteonserver");
+    if (!settings.contains(RTAUTOMATION_PARAMS_BROKERADDRESS))
+        settings.setValue(RTAUTOMATION_PARAMS_BROKERADDRESS, "tcp://localhost:1883");
+    if (!settings.contains(RTAUTOMATION_PARAMS_CLIENTID))
+        settings.setValue(RTAUTOMATION_PARAMS_CLIENTID, "rtinsteonserver");
+    if (!settings.contains(RTAUTOMATION_PARAMS_CLIENTSECRET))
+        settings.setValue(RTAUTOMATION_PARAMS_CLIENTSECRET, "rtinsteonserver");
+    if (!settings.contains(RTAUTOMATION_PARAMS_DEVICEID))
+        settings.setValue(RTAUTOMATION_PARAMS_DEVICEID, "rtinsteonserver");
 
-    settings.beginGroup(RTINSTEON_PARAMS_TOPICGROUP);
+    settings.beginGroup(RTAUTOMATION_PARAMS_TOPICGROUP);
 
-    if (!settings.contains(RTINSTEON_PARAMS_STATUSTOPIC))
-        settings.setValue(RTINSTEON_PARAMS_STATUSTOPIC, "status");
-    if (!settings.contains(RTINSTEON_PARAMS_CONTROLTOPIC))
-        settings.setValue(RTINSTEON_PARAMS_CONTROLTOPIC, "control");
-    if (!settings.contains(RTINSTEON_PARAMS_MANAGEMENTCOMMANDTOPIC))
-        settings.setValue(RTINSTEON_PARAMS_MANAGEMENTCOMMANDTOPIC, "managementCommand");
-    if (!settings.contains(RTINSTEON_PARAMS_MANAGEMENTRESPONSETOPIC))
-        settings.setValue(RTINSTEON_PARAMS_MANAGEMENTRESPONSETOPIC, "managementResponse");
+    if (!settings.contains(RTAUTOMATION_PARAMS_STATUSTOPIC))
+        settings.setValue(RTAUTOMATION_PARAMS_STATUSTOPIC, "status");
+    if (!settings.contains(RTAUTOMATION_PARAMS_CONTROLTOPIC))
+        settings.setValue(RTAUTOMATION_PARAMS_CONTROLTOPIC, "control");
+    if (!settings.contains(RTAUTOMATION_PARAMS_MANAGEMENTCOMMANDTOPIC))
+        settings.setValue(RTAUTOMATION_PARAMS_MANAGEMENTCOMMANDTOPIC, "managementCommand");
+    if (!settings.contains(RTAUTOMATION_PARAMS_MANAGEMENTRESPONSETOPIC))
+        settings.setValue(RTAUTOMATION_PARAMS_MANAGEMENTRESPONSETOPIC, "managementResponse");
 
     settings.endGroup();
 }

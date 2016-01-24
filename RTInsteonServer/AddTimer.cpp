@@ -24,7 +24,7 @@
 #include "InsteonDriver.h"
 #include "AddTimer.h"
 #include "RTInsteonServer.h"
-#include "RTInsteonJSONDefs.h"
+#include "RTAutomationJSONDefs.h"
 
 #define TAG "AddTimer"
 
@@ -46,9 +46,9 @@ bool AddTimer::setVar(const QString& name, const QJsonObject& var)
     bool changed = false;
 
     if (name == "name") {
-        if (m_name != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_name != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_name = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_name = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     }
     return changed;

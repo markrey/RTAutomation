@@ -53,9 +53,9 @@ bool SerialDlg::setVar(const QString& name, const QJsonObject& var)
     bool changed = false;
 
     if (name == "serialPort") {
-        if (m_portName != var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString()) {
+        if (m_portName != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
-            m_portName = var.value(RTINSTEONJSON_CONFIG_VAR_VALUE).toString();
+            m_portName = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     }
     return changed;

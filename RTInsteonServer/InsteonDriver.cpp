@@ -31,7 +31,7 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "RTInsteonLog.h"
+#include "RTAutomationLog.h"
 
 //  ACK/NAK
 
@@ -143,7 +143,7 @@ static const int responseLength[] = {		9,					// 0x50 standard message
 
 #define TAG "InsteonDriver"
 
-InsteonDriver::InsteonDriver() : RTInsteonThread()
+InsteonDriver::InsteonDriver() : RTAutomationThread()
 {
     m_port = NULL;
     m_state = INSTEON_STATE_IDLE;
@@ -220,7 +220,7 @@ void InsteonDriver::onReadyRead()
         }
         if (partialLength == 1) {							// this should be the command code
             if ((current < INSTEON_LOWEST_COMMAND) || (current > INSTEON_HIGHEST_COMMAND)) {
-                RTInsteonLog::logError(TAG, QString(" Illegal Insteon command %1").arg(current));
+                RTAutomationLog::logError(TAG, QString(" Illegal Insteon command %1").arg(current));
                 m_partialResponse.clear();
                 continue;
             }
@@ -567,7 +567,7 @@ void InsteonDriver::background()
 
     if ((m_port != NULL) && !m_port->isOpen()) {
         if (m_state > INSTEON_STATE_WFCONNECT) {
-            RTInsteonLog::logInfo(TAG," PLM port closed");
+            RTAutomationLog::logInfo(TAG," PLM port closed");
             emit PLMPortClosed();
             reconnect();
         }
@@ -600,7 +600,7 @@ void InsteonDriver::background()
             m_port->setParity(PAR_NONE);
             m_port->setStopBits(STOP_1);
             m_port->setFlowControl(FLOW_OFF);
-            RTInsteonLog::logInfo(TAG, " PLM port open");
+            RTAutomationLog::logInfo(TAG, " PLM port open");
             emit PLMPortOpen();
             sendSimpleCommand(INSTEON_GET_IM_INFO);
             m_state = INSTEON_STATE_WFPLMINFO;
@@ -664,7 +664,7 @@ void InsteonDriver::background()
                     loadDatabase();
                     saveDatabase();
                     loadTimers();
-                    RTInsteonLog::logInfo(TAG, "Timers active");
+                    RTAutomationLog::logInfo(TAG, "Timers active");
                     break;
                 }
             }
@@ -688,7 +688,7 @@ void InsteonDriver::background()
 
         if ((adr = decodeALLLinkRecord(message)) == NULL) {
             // decode failed - try again
-            RTInsteonLog::logError(TAG, "Insteon: incorrect ALL link record");
+            RTAutomationLog::logError(TAG, "Insteon: incorrect ALL link record");
             reconnect();
             break;
         }
@@ -710,7 +710,7 @@ void InsteonDriver::background()
 
         if (m_requestOutstanding) {
             if ((now - m_lastRequestTime) >= INSTEON_REQUEST_TIMEOUT) {
-                RTInsteonLog::logWarn(TAG, "Insteon: timed out request to PLM");
+                RTAutomationLog::logWarn(TAG, "Insteon: timed out request to PLM");
                 reconnect();
                 break;
             }
@@ -840,7 +840,7 @@ void InsteonDriver::processTimers()
 
             ir.cmd2 = level;
 
-            RTInsteonLog::logDebug(TAG, QString("setting device %1 to level %2").arg(ir.deviceID, 16).arg(level));
+            RTAutomationLog::logDebug(TAG, QString("setting device %1 to level %2").arg(ir.deviceID, 16).arg(level));
             m_requestQueue.enqueue(ir);
         }
     }
@@ -873,7 +873,7 @@ void InsteonDriver::sendQueuedRequest()
         break;
 
     default:
-        RTInsteonLog::logWarn(TAG, QString("Unexpected request type %1").arg(ir.requestType));
+        RTAutomationLog::logWarn(TAG, QString("Unexpected request type %1").arg(ir.requestType));
         break;
     }
 }
@@ -905,7 +905,7 @@ void InsteonDriver::processResponses()
         case INSTEON_MANAGE_ALL_LINK_RECORD:
             m_requestOutstanding = false;
             if (message.data()[10] == INSTEON_NAK)
-                RTInsteonLog::logWarn(TAG, QString("PLM rejected add/remove device for %1")
+                RTAutomationLog::logWarn(TAG, QString("PLM rejected add/remove device for %1")
                                   .arg(getDeviceID((const unsigned char *)message.constData() + 5)));
             break;
 
@@ -933,13 +933,13 @@ void InsteonDriver::processStandardMessage(const QByteArray &message)
                 m_devices[index].state = "motion";
                 m_devices[index].currentLevel = 0xff;
                 sendAlert(m_devices[index]);
-                RTInsteonLog::logDebug(TAG, QString("Motion detected by %1").arg(m_devices[index].name));
+                RTAutomationLog::logDebug(TAG, QString("Motion detected by %1").arg(m_devices[index].name));
             }
             if ((message.at(9) == 0x13) && (m_devices[index].currentLevel != 0)) {
                 m_devices[index].state = "no motion";
                 m_devices[index].currentLevel = 0;
                 sendAlert(m_devices[index]);
-                RTInsteonLog::logDebug(TAG, QString("Motion no longer detected by %1").arg(m_devices[index].name));
+                RTAutomationLog::logDebug(TAG, QString("Motion no longer detected by %1").arg(m_devices[index].name));
             }
             break;
 
@@ -949,14 +949,14 @@ void InsteonDriver::processStandardMessage(const QByteArray &message)
                 m_devices[index].state = "open";
                 m_devices[index].currentLevel = 0xff;
                 sendAlert(m_devices[index]);
-                RTInsteonLog::logDebug(TAG, QString("Door open detected by %1").arg(m_devices[index].name));
+                RTAutomationLog::logDebug(TAG, QString("Door open detected by %1").arg(m_devices[index].name));
             }
 
             if ((message.at(9) == 0x13) && (m_devices[index].state != "closed")) {
                 m_devices[index].state = "closed";
                 m_devices[index].currentLevel = 0;
                 sendAlert(m_devices[index]);
-                RTInsteonLog::logDebug(TAG, QString("Door closed detected by %1").arg(m_devices[index].name));
+                RTAutomationLog::logDebug(TAG, QString("Door closed detected by %1").arg(m_devices[index].name));
             }
             break;
 
@@ -965,14 +965,14 @@ void InsteonDriver::processStandardMessage(const QByteArray &message)
                 m_devices[index].currentLevel = 0xff;
                 m_devices[index].state = "leak";
                 sendAlert(m_devices[index]);
-                RTInsteonLog::logDebug(TAG, QString("Leak detected by %1").arg(m_devices[index].name));
+                RTAutomationLog::logDebug(TAG, QString("Leak detected by %1").arg(m_devices[index].name));
             }
 
             if (message.at(9) == 0x13) {
                 m_devices[index].currentLevel = 0xff;
                 m_devices[index].state = "no leak";
                 sendAlert(m_devices[index]);
-                RTInsteonLog::logDebug(TAG, QString("No leak detected by %1").arg(m_devices[index].name));
+                RTAutomationLog::logDebug(TAG, QString("No leak detected by %1").arg(m_devices[index].name));
             }
             break;
         }
@@ -984,14 +984,14 @@ void InsteonDriver::processStandardMessage(const QByteArray &message)
                 m_devices[index].currentLevel = 0xff;
                 m_devices[index].state = "no sense";
                 sendAlert(m_devices[index]);
-                RTInsteonLog::logDebug(TAG, QString("IOLinc no sense detected by %1").arg(m_devices[index].name));
+                RTAutomationLog::logDebug(TAG, QString("IOLinc no sense detected by %1").arg(m_devices[index].name));
             }
 
             if (message.at(9) == 0x13) {
                 m_devices[index].currentLevel = 0;
                 m_devices[index].state = "sense";
                 sendAlert(m_devices[index]);
-                RTInsteonLog::logDebug(TAG, QString("IOLinc sense detected by %1").arg(m_devices[index].name));
+                RTAutomationLog::logDebug(TAG, QString("IOLinc sense detected by %1").arg(m_devices[index].name));
             }
             break;
         }
@@ -1049,7 +1049,7 @@ void InsteonDriver::newPortName(QString portName)
 
 void InsteonDriver::reconnect()
 {
-    RTInsteonLog::logInfo(TAG, "Insteon: reconnect");
+    RTAutomationLog::logInfo(TAG, "Insteon: reconnect");
     m_timers.clear();
     m_port->close();
     delete m_port;
@@ -1063,7 +1063,7 @@ void InsteonDriver::reconnect()
 
 void InsteonDriver::disconnect()
 {
-    RTInsteonLog::logInfo(TAG, "Insteon: disconnect");
+    RTAutomationLog::logInfo(TAG, "Insteon: disconnect");
 
     if (m_port == NULL)
         return;
@@ -1198,7 +1198,7 @@ bool InsteonDriver::sendSimpleCommand(char command)
         return false;
 
     if (m_trace)
-        RTInsteonLog::logInfo(TAG, QString("Insteon: sending %1").arg(QString::number((unsigned char)command, 16)));
+        RTAutomationLog::logInfo(TAG, QString("Insteon: sending %1").arg(QString::number((unsigned char)command, 16)));
 
     m_lastRequestTime = QDateTime::currentMSecsSinceEpoch();
     m_requestOutstanding = true;
@@ -1259,9 +1259,9 @@ bool InsteonDriver::sendAddDeviceMessage(unsigned int deviceID, bool add)
     m_requestOutstanding = true;
 
     if (add)
-        RTInsteonLog::logInfo(TAG, QString("PLM adding %1").arg(QString::number(m_devices.at(deviceIndex).deviceID, 16)));
+        RTAutomationLog::logInfo(TAG, QString("PLM adding %1").arg(QString::number(m_devices.at(deviceIndex).deviceID, 16)));
     else
-        RTInsteonLog::logInfo(TAG, QString("PLM removing %1").arg(QString::number(m_devices.at(deviceIndex).deviceID, 16)));
+        RTAutomationLog::logInfo(TAG, QString("PLM removing %1").arg(QString::number(m_devices.at(deviceIndex).deviceID, 16)));
 
     data[0] = 2;
     data[1] = INSTEON_MANAGE_ALL_LINK_RECORD;
@@ -1305,15 +1305,15 @@ void InsteonDriver::displayMessage(const QByteArray& message, const char *prefix
     for (int i = 0; i < message.length(); i++)
         str += strTmp.sprintf("%02X", (unsigned char)message.at(i));
 
-    RTInsteonLog::logInfo(TAG, str);
+    RTAutomationLog::logInfo(TAG, str);
 }
 
 void InsteonDriver::setTrace(bool state)
 {
     if (state)
-        RTInsteonLog::setLogDisplayLevel(RTINSTEON_LOG_LEVEL_DEBUG);
+        RTAutomationLog::setLogDisplayLevel(RTAUTOMATION_LOG_LEVEL_DEBUG);
     else
-        RTInsteonLog::setLogDisplayLevel(RTINSTEON_LOG_LEVEL_WARN);
+        RTAutomationLog::setLogDisplayLevel(RTAUTOMATION_LOG_LEVEL_WARN);
     m_trace = state;
 }
 
@@ -1393,7 +1393,7 @@ void InsteonDriver::loadDatabase()
         settings.endGroup();
     }
     settings.endGroup();
-    RTInsteonLog::logDebug(TAG, QString("Devices: %1, m_devices %2").arg(devices.count()).arg(m_devices.count()));
+    RTAutomationLog::logDebug(TAG, QString("Devices: %1, m_devices %2").arg(devices.count()).arg(m_devices.count()));
 }
 
 void InsteonDriver::saveDatabase()
@@ -1528,8 +1528,8 @@ void InsteonDriver::calculateSunriseSunset()
 
     m_sunrise = convertJDToQTime(jRise);
     m_sunset = convertJDToQTime(jSet);
-    RTInsteonLog::logInfo(TAG, QString("Sunrise: %1").arg(m_sunrise.toString()));
-    RTInsteonLog::logInfo(TAG, QString("Sunset: %1").arg(m_sunset.toString()));
+    RTAutomationLog::logInfo(TAG, QString("Sunrise: %1").arg(m_sunrise.toString()));
+    RTAutomationLog::logInfo(TAG, QString("Sunset: %1").arg(m_sunset.toString()));
 }
 
 QTime InsteonDriver::convertJDToQTime(double JD)
@@ -1575,7 +1575,7 @@ void InsteonDriver::displayJD(double JD)
         jdn += 1;
     }
 
-    RTInsteonLog::logDebug(TAG, QString("Julian Date %1 %2:%3").arg(QDate::fromJulianDay(jdn).toString())
+    RTAutomationLog::logDebug(TAG, QString("Julian Date %1 %2:%3").arg(QDate::fromJulianDay(jdn).toString())
                        .arg(hour).arg(minute));
 }
 
