@@ -1,8 +1,8 @@
-# RTAutomation - apps to control an smart home installation using MQTT
+# RTAutomation - apps to control a sentient space using MQTT
 
 ### Introduction
 
-RTAutomation consists of a set of apps that can be used to control a smart home automation system. The apps are:
+RTAutomation consists of a set of apps that can be used to implement a sentient space. The apps are:
 
 * RTInsteonServer. This app drives an Insteon PowerLinc modem and is able to obtain the current level of pollable devices and also run timers to auutomatically control device states. It uses MQTT to transfer the status of pollable devices and also alerts for devices such as open/close sensors such as the Insteon 2843-222. It runs on Ubuntu systems.
 
