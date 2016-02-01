@@ -214,8 +214,10 @@ void KafkaConsumer::msgConsume(rd_kafka_message_t *rkmessage, void * /* opaque *
                rd_kafka_message_errstr(rkmessage));
         fflush(stdout);
 
-                if (rkmessage->err == RD_KAFKA_RESP_ERR__UNKNOWN_PARTITION ||
-                    rkmessage->err == RD_KAFKA_RESP_ERR__UNKNOWN_TOPIC)
+        if (rkmessage->err == RD_KAFKA_RESP_ERR__UNKNOWN_PARTITION ||
+             rkmessage->err == RD_KAFKA_RESP_ERR__UNKNOWN_TOPIC) {
+        }
+        RTAutomationLog::logError(TAG, QString("Got error from Kafka %1").arg(rkmessage->err));
 
         return;
     }

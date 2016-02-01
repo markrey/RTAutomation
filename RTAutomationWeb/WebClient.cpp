@@ -114,7 +114,7 @@ void WebClient::clientProcessReceivedMessage(const QString& topic, QJsonObject j
             RTAutomationLog::logError(TAG, QString("No video data in message from ") + topic);
             return;
         }
-        mediaData = QByteArray::fromHex(json[RTMQTTJSON_VIDEO_DATA].toString().toLatin1());
+        mediaData = QByteArray::fromBase64(json[RTMQTTJSON_VIDEO_DATA].toString().toLatin1());
         emit newJpegData(deviceName, mediaData);
         if (g_deviceDatabase->timeForThumbnail(deviceName))
             sendThumbnail(deviceName, mediaData);

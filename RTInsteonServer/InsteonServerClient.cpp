@@ -52,8 +52,8 @@ void InsteonServerClient::clientInit()
     m_managementResponseTopic = deviceID + "/" + settings.value(RTAUTOMATION_PARAMS_MANAGEMENTRESPONSETOPIC).toString();
     settings.endGroup();
 
-    addSubTopic(m_controlTopic);
-    addSubTopic(m_managementCommandTopic);
+    lockedAddSubTopic(m_controlTopic);
+    lockedAddSubTopic(m_managementCommandTopic);
 }
 
 void InsteonServerClient::clientStop()
