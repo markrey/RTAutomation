@@ -50,3 +50,8 @@
 #define RTMQTTJSON_AUDIO_CHANNELS   "achannels"             // number of audio channels
 #define RTMQTTJSON_AUDIO_SAMPTYPE   "asamptype"             // sample type (eg int16)
 #define RTMQTTJSON_AUDIO_FORMAT     "aformat"
+
+// variables used in JSON decode speech records
+
+#define RTMQTTJSON_DECODEDSPEECH_TEXT   "text"              // the text of the decoded speech
+#define RTMQTTJSON_DECODEDSPEECH_SAY    "say"               // what the system should say via TTS

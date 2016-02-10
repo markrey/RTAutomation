@@ -36,7 +36,7 @@
 #define RTAUTOMATION_PARAMS_DEVICEID       "MQTTDeviceID"
 #define RTAUTOMATION_PARAMS_SERVERID       "MQTServerID"
 
-//  RTInsteonServer topic settings keys
+//  RTSRServer topic settings keys
 
 #define RTAUTOMATION_PARAMS_TOPICGROUP     "topicGroup"
 #define RTAUTOMATION_PARAMS_STATUSTOPIC    "statusTopic"
