@@ -40,13 +40,25 @@
 #define SPEECH_SILENCE                  2048                // max value defined as silence
 #define SPEECH_GAP                      500                 // this much silence is a gap
 #define SPEECH_MAX_OUTSTANDING_SAMPLES  (16000 * 256)       // max samples before we force recognition
+#define SPEECH_TTS_MIN                  5000                // 5 seconds wait TTS start
+#define SPEECH_TTS_MAX                  60000               // 60 seconds wait maximum for TTS if started
+
+//  speech decode states
+
+#define WAITING_FOR_HELLO               0                   // waiting for wakeup phrase
+#define WAITING_FOR_INPUT               1                   // waiting for some speech to be decoded
+#define WAITING_FOR_DECODE              2                   // waiting for decode from api.ai
+#define WAITING_FOR_TTS                 3                   // waiting for tts to finish
 
 SpeechDecoder::SpeechDecoder() : RTAutomationThread()
 {
     m_ps = NULL;
 
-    m_commands  << "HELLO ARTY"                             // the wakeup command (must be first entry)
-                << "GOODBYE ARTY";                          // cancel current activity (must be second entry)
+    m_helloCommand = "HELLO ARTY";                          // the hello phrase
+    m_goodbyeCommand = "GOODBYE ARTY";                      // the goodbye [hrase
+
+    m_timerID = -1;
+    m_curlProcess = NULL;
 }
 
 void SpeechDecoder::initModule()
@@ -77,24 +89,97 @@ void SpeechDecoder::initModule()
         m_ps = NULL;
         return;
     }
+
+    QSettings settings;
+
+    settings.beginGroup(SPEECH_DECODER_GROUP);
+    m_decoderKey = settings.value(SPEECH_DECODER_KEY).toString();
+    m_decoderToken = settings.value(SPEECH_DECODER_TOKEN).toString();
+    settings.endGroup();
+
+    m_state = WAITING_FOR_HELLO;
+
+    m_curlProcess = new QProcess(this);
+    connect(m_curlProcess, SIGNAL(error(QProcess::ProcessError)),
+            this, SLOT(decoderError(QProcess::ProcessError)));
+    connect(m_curlProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+            this, SLOT(decoderFinished(int,QProcess::ExitStatus)));
+    connect(m_curlProcess, SIGNAL(readyReadStandardError()),
+            this, SLOT(decoderReadyReadStandardError()));
+    connect(m_curlProcess, SIGNAL(readyReadStandardOutput()),
+            this, SLOT(decoderReadyReadStandardOutput()));
+
     m_silenceStart = 1000;
     m_active = false;
-    m_commandActive = false;
     m_outstandingSamples = 0;
+
+    m_timerID = startTimer(100);
 }
 
 void SpeechDecoder::stopModule()
 {
+    if (m_timerID != -1) {
+        killTimer(m_timerID);
+        m_timerID = -1;
+    }
+
     if (m_ps != NULL) {
         ps_free(m_ps);
         m_ps = NULL;
     }
+
+    if (m_curlProcess != NULL) {
+        m_curlProcess->deleteLater();
+        m_curlProcess = NULL;
+    }
+}
+
+void SpeechDecoder::timerEvent(QTimerEvent *)
+{
+    switch (m_state) {
+        case WAITING_FOR_HELLO:
+            break;
+
+        case WAITING_FOR_INPUT:
+            break;
+
+        case WAITING_FOR_DECODE:
+            break;
+
+        case WAITING_FOR_TTS:
+            if ((QDateTime::currentMSecsSinceEpoch() > m_ttsTimer)) {
+                m_state = m_nextState;
+                qDebug() << "timeout not tts";
+            }
+            break;
+
+    }
+}
+
+void SpeechDecoder::ttsComplete(QString /* topic */, QJsonObject json)
+{
+    if (m_state != WAITING_FOR_TTS)
+        return;
+
+    if (json.value("complete").toBool()) {
+        qDebug() << "tts complete";
+        m_state = m_nextState;
+        return;
+    }
+
+    // started but not complete - extend timer
+
+    m_ttsTimer = QDateTime::currentMSecsSinceEpoch() + SPEECH_TTS_MAX;
+    qDebug() << "tts starting";
 }
 
 void SpeechDecoder::newAudio(QString topic, QJsonObject audio)
 {
     char const *hyp;
     qint32 bestScore;
+
+    if ((m_state == WAITING_FOR_DECODE) || (m_state == WAITING_FOR_TTS))
+        return;                                             // don't process while waiting for response
 
     if (m_ps == NULL)
         return;
@@ -130,6 +215,7 @@ void SpeechDecoder::newAudio(QString topic, QJsonObject audio)
     int sampleCount = audioData.count() / 2;
 
     silenceDetector(audioData);
+
     if (m_active) {
         try {
             if (ps_process_raw(m_ps, (const int16 *)audioData.constData(), sampleCount, FALSE, FALSE) < 0) {
@@ -143,6 +229,7 @@ void SpeechDecoder::newAudio(QString topic, QJsonObject audio)
             return;
         }
         m_outstandingSamples += sampleCount;
+        m_accumulatedAudio += audioData;
     }
     if (m_active && (((QDateTime::currentMSecsSinceEpoch() - m_silenceStart) >= SPEECH_GAP) ||
                     (m_outstandingSamples >= SPEECH_MAX_OUTSTANDING_SAMPLES))) {
@@ -180,8 +267,34 @@ void SpeechDecoder::newAudio(QString topic, QJsonObject audio)
             m_ps = NULL;
             return;
         }
+
+        if ((m_decoderToken != "") && (m_decoderKey != "") &&
+                (m_state == WAITING_FOR_INPUT) && (m_accumulatedAudio.length() > 0)) {
+            QStringList args;
+            args << "-k"
+                 << "-F"
+                 << "request={'timezone':'America/New_York', 'lang':'en'};type=application/json"
+                 << "-F"
+                 << "voiceData=@audio.wav;type=audio/wav"
+                 << "-H"
+                 << "Authorization: Bearer " + m_decoderToken
+                 << "-H"
+                 << "ocp-apim-subscription-key: " + m_decoderKey
+                 << "https://api.api.ai/v1/query?v=20150910";
+
+            QFile file("audio.wav");
+            file.open(QIODevice::WriteOnly);
+            file.write(m_accumulatedAudio);
+            file.close();
+            m_accumulatedAudio.clear();
+
+            m_curlProcess->start("curl", args);
+            m_state = WAITING_FOR_DECODE;
+        }
     }
 }
+
+
 QByteArray SpeechDecoder::reformatAudio(const QByteArray origData, int channels, int /* rate */)
 {
     if (channels != 2)
@@ -205,17 +318,21 @@ QByteArray SpeechDecoder::reformatAudio(const QByteArray origData, int channels,
 
 void SpeechDecoder::processInput(const QString& input)
 {
-    QString message;
+    switch (m_state) {
+        case WAITING_FOR_HELLO:
+            if (input == m_helloCommand) {
+                m_state = WAITING_FOR_INPUT;
+                sendDecodedSpeech(input, "I am at your command", WAITING_FOR_INPUT);
+                m_accumulatedAudio.clear();
+            }
+            break;
 
-    if (!m_commandActive && (input == m_commands.at(0))) {
-        m_commandActive = true;
-        sendDecodedSpeech(input, "I am at your command");
-        return;
-    }
-    if (m_commandActive && (input == m_commands.at(1))) {
-        m_commandActive = false;
-        sendDecodedSpeech(input, "enjoy your day");
-        return;
+        case WAITING_FOR_INPUT:
+            if (input == m_goodbyeCommand) {
+                m_state = WAITING_FOR_HELLO;
+                sendDecodedSpeech(input, "enjoy your day", WAITING_FOR_HELLO);
+            }
+            break;
     }
 }
 
@@ -236,7 +353,7 @@ bool SpeechDecoder::silenceDetector(const QByteArray& audioData)
     return allSilence;
 }
 
-void SpeechDecoder::sendDecodedSpeech(const QString &text, const QString &say)
+void SpeechDecoder::sendDecodedSpeech(const QString &text, const QString &say, int nextState)
 {
     if ((text.length() == 0) && (say.length() == 0))
         return;
@@ -246,4 +363,60 @@ void SpeechDecoder::sendDecodedSpeech(const QString &text, const QString &say)
     jso[RTMQTTJSON_DECODEDSPEECH_SAY] = say;
     jso[RTMQTTJSON_TIMESTAMP] = (double)QDateTime::currentMSecsSinceEpoch() / 1000.0;
     emit decodedSpeech(jso);
+    m_state = WAITING_FOR_TTS;
+    m_nextState = nextState;
+
+    m_ttsTimer = QDateTime::currentMSecsSinceEpoch() + SPEECH_TTS_MIN;
+}
+
+//  decode process signal handlers
+
+void SpeechDecoder::decoderError(QProcess::ProcessError error)
+{
+    qDebug() << "process error " << error;
+    if (m_state == WAITING_FOR_DECODE)
+        m_state = WAITING_FOR_INPUT;
+}
+
+void SpeechDecoder::decoderFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    qDebug() << "process finished " << exitCode << ", " << exitStatus;
+    if (m_state == WAITING_FOR_DECODE)
+        m_state = WAITING_FOR_INPUT;
+}
+
+void SpeechDecoder::decoderReadyReadStandardError()
+{
+//    qDebug() << "stderr: " << m_curlProcess->readAllStandardError();
+}
+
+void SpeechDecoder::decoderReadyReadStandardOutput()
+{
+    QString output = m_curlProcess->readAllStandardOutput();
+
+    // find JSON part
+    int index = output.indexOf('{');
+    if (index == -1)
+        return;
+    output.remove(0, index);
+
+    QJsonDocument var(QJsonDocument::fromJson(output.toLatin1()));
+    QJsonObject json = var.object();
+
+    if(!json.contains("result"))
+        return;
+
+    QJsonObject result = json.value("result").toObject();
+
+    if(!result.contains("fulfillment"))
+        return;
+
+    QJsonObject fulfillment = result.value("fulfillment").toObject();
+
+    if (fulfillment.contains("speech")) {
+        QString tts = fulfillment.value("speech").toString();
+        sendDecodedSpeech(tts, tts, WAITING_FOR_INPUT);
+    }
+
+    qDebug() << var.toJson();
 }

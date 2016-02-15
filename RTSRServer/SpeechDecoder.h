@@ -29,12 +29,20 @@
 
 #include <qstringlist.h>
 #include <qjsonobject.h>
+#include <qnetworkaccessmanager.h>
+#include <qprocess.h>
 
 #include "RTAutomationThread.h"
 
 //  Note: this module only processes signed 16 bit, little endian, 16000 sps, 1 or 2 channel data.
 //
 //  Since Sphinx only supports 1 channel, if the data is two channel, the channels are averaged
+
+//  Settings keys
+
+#define SPEECH_DECODER_GROUP            "speechDecoder"
+#define SPEECH_DECODER_KEY              "key"
+#define SPEECH_DECODER_TOKEN            "token"
 
 class SpeechDecoder : public RTAutomationThread
 {
@@ -45,6 +53,11 @@ public:
 
 public slots:
     void newAudio(QString topic, QJsonObject audio);
+    void ttsComplete(QString topic, QJsonObject json);
+    void decoderError(QProcess::ProcessError error);
+    void decoderFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    void decoderReadyReadStandardOutput();
+    void decoderReadyReadStandardError();
 
 signals:
     void decodedSpeech(QJsonObject speech);
@@ -53,12 +66,23 @@ signals:
 protected:
     void initModule();
     void stopModule();
+    void timerEvent(QTimerEvent *);
 
 private:
     QByteArray reformatAudio(const QByteArray origData, int channels, int rate);
     void processInput(const QString& input);
     bool silenceDetector(const QByteArray& audioData);
-    void sendDecodedSpeech(const QString& text, const QString& say);
+    void sendDecodedSpeech(const QString& text, const QString& say, int nextState);
+
+    QString m_decoderKey;
+    QString m_decoderToken;
+
+    QByteArray m_accumulatedAudio;
+
+    QProcess *m_curlProcess;
+
+    int m_state;
+    int m_nextState;
 
     qint64 m_silenceStart;
     bool m_active;
@@ -66,9 +90,13 @@ private:
     ps_decoder_t *m_ps;
     int m_outstandingSamples;
 
-    QStringList m_commands;
+    QString m_helloCommand;
+    QString m_goodbyeCommand;
 
-    bool m_commandActive;
+    qint64 m_ttsTimer;
+
+    int m_timerID;
+
 };
 
 #endif // _SPEECHDECODER_H

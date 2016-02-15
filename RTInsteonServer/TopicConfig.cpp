@@ -26,7 +26,7 @@
 #include "TopicConfig.h"
 #include "RTInsteonServer.h"
 
-TopicConfig::TopicConfig() : Dialog(RTINSTEONSERVER_TOPICCONFIG_NAME, RTINSTEONSERVER_TOPICCONFIG_DESC)
+TopicConfig::TopicConfig() : Dialog(RTINSTEONSERVER_TOPICCONFIG_NAME, RTINSTEONSERVER_TOPICCONFIG_DESC, 600)
 {
     setConfigDialog(true);
 }

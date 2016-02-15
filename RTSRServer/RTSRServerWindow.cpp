@@ -27,6 +27,7 @@
 #include "RTSRServer.h"
 #include "RTSRServerClient.h"
 #include "TopicConfig.h"
+#include "ApiaiConfig.h"
 #include "SpeechDecoder.h"
 
 #include "CommandService.h"
@@ -43,6 +44,7 @@ RTSRServerWindow::RTSRServerWindow() : MainDialog()
 
     connect(m_decoder, SIGNAL(decodedSpeech(QJsonObject)), m_client, SLOT(decodedSpeech(QJsonObject)));
     connect(m_client, SIGNAL(newAudio(QString,QJsonObject)), m_decoder, SLOT(newAudio(QString, QJsonObject)));
+    connect(m_client, SIGNAL(ttsComplete(QString,QJsonObject)), m_decoder, SLOT(ttsComplete(QString, QJsonObject)));
 
     m_client->resumeThread();
     m_decoder->resumeThread();
@@ -51,6 +53,9 @@ RTSRServerWindow::RTSRServerWindow() : MainDialog()
 
     TopicConfig *topicConfig = new TopicConfig();
     RTAutomationJSON::addConfigDialog(topicConfig);
+
+    ApiaiConfig *apiaiConfig = new ApiaiConfig();
+    RTAutomationJSON::addConfigDialog(apiaiConfig);
 
     startServices();
 }

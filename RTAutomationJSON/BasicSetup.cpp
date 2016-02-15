@@ -25,7 +25,8 @@
 
 #include "BasicSetup.h"
 
-BasicSetup::BasicSetup() : Dialog(RTAUTOMATIONJSON_DIALOG_NAME_BASICSETUP, RTAUTOMATIONJSON_DIALOG_DESC_BASICSETUP)
+BasicSetup::BasicSetup() : Dialog(RTAUTOMATIONJSON_DIALOG_NAME_BASICSETUP,
+                                  RTAUTOMATIONJSON_DIALOG_DESC_BASICSETUP, 400)
 {
     setConfigDialog(true);
 }

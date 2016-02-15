@@ -91,6 +91,7 @@
 
 #define RTAUTOMATIONJSON_DIALOG_NAME             "dialogName"        // the internal name of the dialog
 #define RTAUTOMATIONJSON_DIALOG_DESC             "dialogDesc"        // this is displayed on the dialog as the title
+#define RTAUTOMATIONJSON_DIALOG_MINWIDTH         "dialogMinwidth"    // minimum dialog width
 #define RTAUTOMATIONJSON_DIALOG_UPDATE           "dialogUpdate"      // true if dialog needs updating
 #define RTAUTOMATIONJSON_DIALOG_COOKIE           "dialogCookie"      // used to retain state across updates
 #define RTAUTOMATIONJSON_DIALOG_DATA             "dialogData"        // an array of dialog entries

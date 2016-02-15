@@ -32,7 +32,7 @@ class Dialog : public QObject
     Q_OBJECT
 
 public:
-    Dialog(const QString& name, const QString& desc);
+    Dialog(const QString& name, const QString& desc, int minWidth = 300);
     virtual ~Dialog() {}
 
     bool isConfigDialog() { return m_configDialog; }
@@ -40,6 +40,7 @@ public:
 
     const QString& getName() { return m_name; }
     const QString& getDesc() { return m_desc; }
+    int getMinWidth() { return m_minWidth; }
 
     bool setDialog(const QJsonObject& json );
 
@@ -86,6 +87,7 @@ protected:
 
     QString m_name;
     QString m_desc;
+    int m_minWidth;
 
 private:
     QJsonArray m_varArray;

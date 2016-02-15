@@ -10,7 +10,7 @@ RTAutomation consists of a set of apps that can be used to implement a sentient 
 
 * RTAutomationWeb. This provides a web interface to real time RTMQTT data and also historic data via NiFi with RTNiFiStreamProcessors and Kafka. RTAutomationWeb runs on Ubuntu 14.04.
 
-* RTSRServer. This provides a speech decoding capability currently based on CMU Sphinx.
+* RTSRServer. This provides a speech decoding capability currently based on CMU Sphinx and api.ai.
 
 * RTAutomationManager. RTInsteonServer, RTSRServer and RTAutomationWeb can be run in console mode instead of GUI mode when run on headless servers. To manage RTInsteonServer and RTAutomationWeb from another desktop, RTAutomationManager can be used to duplicate the local GUI management interface. RTAutomationManager runs on Ubuntu and Mac OS X.
 
@@ -46,6 +46,10 @@ The librdkafka client is also required:
     make
     sudo make install
         
+RTSRServer uses curl to interact with api.ai:
+
+    sudo apt-get install curl        
+        
 #### Mac OS X
 
 Qt5, Xcode and the Paho MQTT client are required. Xcode can be installed from the App Store. Qt5 can be installed using the QT5 installers here - http://doc.qt.io/qt-5/osx.html.
@@ -58,17 +62,11 @@ To run RTSRServer, pocketsphinx and sphinxbase are required. Follow the instruct
 
 ### Build
 
-Once the pre-requisites have been installed, the repo can be cloned and built:
+Once the pre-requisites have been installed, the repo can be cloned:
 
     cd ~/
     git clone git://github.com/richards-tech/RTAutomation.git
-    cd RTAutomation
-    qmake
-    make -j4
-    sudo make install
     
-On Ubuntu this will build RTInsteonServer, RTInsteonController and RTInsteonManager. On Mac OS X, this will omit RTInsteonServer as it will not work on the Mac OS X.
-
 Any of the apps can be built individually by going to the relevant subdirectory:
 
     cd ~/RTAutomation/RTSRServer
@@ -146,7 +144,9 @@ RTSRServer assumes a standard pocketsphinx and sphinxbase installation on Ubuntu
 
 Phrases.txt contains the two supported commands "HELLO ARTY" and "GOODBYE ARTY". The idea is that HELLO ARTY starts the voice input mode while GOODBYE ARTY terminates it. Other commands can be added to Phrases.txt and then use lmtool (http://www.speech.cs.cmu.edu/tools/lmtool-new.html) to build the new language modelling files with the extra commands. SpeechDecoder.cpp also needs to be modified to support extra commands.
 
-The decoded commands can be displayed as text and spoken by RTDecodedSpeechMQTT, part of RTMQTT (https://github.com/richards-tech/RTMQTT).
+While in voice input mode, audio data is sent to api.ai for natural language processing. For this to work, the api.ai subscription key and client access token must be configured. This can be done locally if RTSRServer is running in GUI mode or using RTAutomationManager if not.
+
+The decoded commands can be displayed as text and spoken by RTDecodedSpeechMQTT, part of RTMQTT (https://github.com/richards-tech/RTMQTT). RTDecodedSpeechMQTT generates MQTT message back to RTSRServer so that it ignores user input while it is outputting text as speech to avoid an infinite loop if the microphone and speaker are in the same location (which would normally be the case).
 
 RTSRServer is managed in the same way as RTInsteonServer. It can be managed via the local GUI if in GUI mode or via RTAutomationManager if in console mode.
 

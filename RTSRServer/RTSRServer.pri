@@ -29,11 +29,13 @@ HEADERS += RTSRServer.h \
         RTSRServerClient.h \
         SpeechDecoder.h \
         TopicConfig.h \
+        ApiaiConfig.h \
 
 SOURCES += RTSRServer.cpp \
         RTSRServerWindow.cpp \
         RTSRServerClient.cpp \
         SpeechDecoder.cpp \
         TopicConfig.cpp \
+        ApiaiConfig.cpp \
         main.cpp \
 

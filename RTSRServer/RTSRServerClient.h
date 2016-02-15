@@ -40,6 +40,7 @@ public slots:
 signals:
     void receiveCommandData(QJsonObject json);
     void newAudio(QString topic, QJsonObject json);
+    void ttsComplete(QString topic, QJsonObject json);
 
 protected:
     void clientInit();
@@ -50,6 +51,7 @@ protected:
 private:
     QString m_audioTopic;
     QString m_decodedSpeechTopic;
+    QString m_ttsCompleteTopic;
     QString m_managementCommandTopic;
     QString m_managementResponseTopic;
     QString m_deviceID;

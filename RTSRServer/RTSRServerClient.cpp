@@ -54,10 +54,12 @@ void RTSRServerClient::clientInit()
     settings.beginGroup(RTSRSERVER_PARAMS_TOPIC_GROUP);
     m_audioTopic = settings.value(RTSRSERVER_PARAMS_AUDIO_TOPIC).toString();
     m_decodedSpeechTopic = m_deviceID + "/" + settings.value(RTSRSERVER_PARAMS_DECODEDSPEECH_TOPIC).toString();
+    m_ttsCompleteTopic = settings.value(RTSRSERVER_PARAMS_TTSCOMPLETE_TOPIC).toString();
     settings.endGroup();
 
     lockedAddSubTopic(m_managementCommandTopic);
     lockedAddSubTopic(m_audioTopic);
+    lockedAddSubTopic(m_ttsCompleteTopic);
 }
 
 void RTSRServerClient::clientStop()
@@ -71,7 +73,13 @@ void RTSRServerClient::clientTimer(QTimerEvent *)
 
 void RTSRServerClient::clientProcessReceivedMessage(const QString& topic, QJsonObject json)
 {
-    emit newAudio(topic, json);
+    if (topic == m_audioTopic)
+        emit newAudio(topic, json);
+    else if (topic == m_ttsCompleteTopic) {
+        emit ttsComplete(topic, json);
+    } else if (topic == m_managementCommandTopic) {
+        emit receiveCommandData(json);
+    }
 }
 
 void RTSRServerClient::sendCommandData(QJsonObject json)

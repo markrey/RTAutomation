@@ -25,6 +25,7 @@
 #include "RTSRServerWindow.h"
 #include "RTAutomationArgs.h"
 #include "RTAutomationJSON.h"
+#include "SpeechDecoder.h"
 
 #include <qapplication.h>
 #include <qsettings.h>
@@ -98,7 +99,16 @@ void presetDefaultSettings()
         settings.setValue(RTSRSERVER_PARAMS_AUDIO_TOPIC, "rtaudio/audio");
     if (!settings.contains(RTSRSERVER_PARAMS_DECODEDSPEECH_TOPIC))
         settings.setValue(RTSRSERVER_PARAMS_DECODEDSPEECH_TOPIC, "decodedspeech");
+    if (!settings.contains(RTSRSERVER_PARAMS_TTSCOMPLETE_TOPIC))
+        settings.setValue(RTSRSERVER_PARAMS_TTSCOMPLETE_TOPIC, "rtdecodedspeech/ttscomplete");
 
+    settings.endGroup();
+
+    settings.beginGroup(SPEECH_DECODER_GROUP);
+    if (!settings.contains(SPEECH_DECODER_KEY))
+        settings.setValue(SPEECH_DECODER_KEY, "");
+    if (!settings.contains(SPEECH_DECODER_TOKEN))
+        settings.setValue(SPEECH_DECODER_TOKEN, "");
     settings.endGroup();
 
 }

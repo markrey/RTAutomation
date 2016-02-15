@@ -204,7 +204,7 @@ void DialogMenu::configDialogSelect(int dialogIndex)
     QString dialogName = m_configMenuArray[dialogIndex].toObject().value(RTAUTOMATIONJSON_DIALOGMENU_NAME).toString();
     QString dialogDesc = m_configMenuArray[dialogIndex].toObject().value(RTAUTOMATIONJSON_DIALOGMENU_DESC).toString();
 
-    GenericDialog dlg(m_app, dialogName, dialogDesc, QJsonObject(), this);
+    GenericDialog dlg(m_app, dialogName, dialogDesc, 250, QJsonObject(), this);
 
     m_menuMode = false;
     connect(this, SIGNAL(sendDialogData(QJsonObject)), &dlg, SLOT(receiveDialogData(QJsonObject)));
@@ -239,7 +239,7 @@ void DialogMenu::infoDialogSelect(int dialogIndex)
     QString dialogName = m_infoMenuArray[dialogIndex].toObject().value(RTAUTOMATIONJSON_DIALOGMENU_NAME).toString();
     QString dialogDesc = m_infoMenuArray[dialogIndex].toObject().value(RTAUTOMATIONJSON_DIALOGMENU_DESC).toString();
 
-    GenericDialog dlg(m_app, dialogName, dialogDesc, QJsonObject(), this);
+    GenericDialog dlg(m_app, dialogName, dialogDesc, 250, QJsonObject(), this);
 
     m_menuMode = false;
     connect(this, SIGNAL(sendDialogData(QJsonObject)), &dlg, SLOT(receiveDialogData(QJsonObject)));

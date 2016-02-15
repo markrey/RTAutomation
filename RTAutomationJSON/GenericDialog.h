@@ -78,7 +78,7 @@ class GenericDialog : public QDialog
 
 public:
     GenericDialog(const QString& app, const QString& dialogName, const QString& dialogDesc,
-                  const QJsonObject& param, QWidget *parent);      // if fetching remotely
+                  int dialogMinWidth, const QJsonObject& param, QWidget *parent);      // if fetching remotely
     GenericDialog(const QString& app, Dialog *dialog, const QJsonObject& param, QWidget *parent);  // if we have the dialog already
     ~GenericDialog();
 
@@ -116,6 +116,7 @@ private:
     QString m_app;
     QString m_dialogName;
     QString m_dialogDesc;
+    int m_dialogMinWidth;
     QString m_dialogCookie;
     QJsonObject m_param;
     bool m_dialogUpdateFlag;

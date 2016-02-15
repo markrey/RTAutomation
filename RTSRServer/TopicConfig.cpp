@@ -26,7 +26,7 @@
 #include "TopicConfig.h"
 #include "RTSRServer.h"
 
-TopicConfig::TopicConfig() : Dialog(RTSRSERVER_TOPICCONFIG_NAME, RTSRSERVER_TOPICCONFIG_DESC)
+TopicConfig::TopicConfig() : Dialog(RTSRSERVER_TOPICCONFIG_NAME, RTSRSERVER_TOPICCONFIG_DESC, 600)
 {
     setConfigDialog(true);
 }
@@ -44,6 +44,11 @@ bool TopicConfig::setVar(const QString& name, const QJsonObject& var)
         if (m_decodedSpeechTopic != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
             changed = true;
             m_decodedSpeechTopic = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
+        }
+    } else if (name == "ttsCompleteTopic") {
+        if (m_ttsCompleteTopic != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
+            changed = true;
+            m_ttsCompleteTopic = var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString();
         }
     } else if (name == "managementCommandTopic") {
         if (m_managementCommandTopic != var.value(RTAUTOMATIONJSON_CONFIG_VAR_VALUE).toString()) {
@@ -64,6 +69,7 @@ void TopicConfig::getDialog(QJsonObject& newDialog)
     clearDialog();
     addVar(createConfigStringVar("audioTopic", "Topic for incoming audio stream (sub)", m_audioTopic));
     addVar(createConfigStringVar("decodedSpeechTopic", "Topic for outgoing decoded speech (pub)", m_decodedSpeechTopic));
+    addVar(createConfigStringVar("ttsCompleteTopic", "Topic for text to speech complete message (sub)", m_ttsCompleteTopic));
     addVar(createGraphicsLineVar());
     addVar(createConfigStringVar("managementCommandTopic", "Topic for management commands (sub)", m_managementCommandTopic));
     addVar(createConfigStringVar("managementResponseTopic", "Topic for management responses (pub)", m_managementResponseTopic));
@@ -82,6 +88,7 @@ void TopicConfig::loadLocalData(const QJsonObject& /* param */)
     settings.beginGroup(RTSRSERVER_PARAMS_TOPIC_GROUP);
     m_audioTopic = settings.value(RTSRSERVER_PARAMS_AUDIO_TOPIC).toString();
     m_decodedSpeechTopic = settings.value(RTSRSERVER_PARAMS_DECODEDSPEECH_TOPIC).toString();
+    m_ttsCompleteTopic = settings.value(RTSRSERVER_PARAMS_TTSCOMPLETE_TOPIC).toString();
     settings.endGroup();
 }
 
@@ -97,6 +104,7 @@ void TopicConfig::saveLocalData()
     settings.beginGroup(RTSRSERVER_PARAMS_TOPIC_GROUP);
     settings.setValue(RTSRSERVER_PARAMS_AUDIO_TOPIC, m_audioTopic);
     settings.setValue(RTSRSERVER_PARAMS_DECODEDSPEECH_TOPIC, m_decodedSpeechTopic);
+    settings.setValue(RTSRSERVER_PARAMS_TTSCOMPLETE_TOPIC, m_ttsCompleteTopic);
     settings.endGroup();
 }
 

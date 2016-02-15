@@ -21,15 +21,15 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 //  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef _TOPICCONFIG_H
-#define _TOPICCONFIG_H
+#ifndef _APIAICONFIG_H
+#define _APIAICONFIG_H
 
 #include "Dialog.h"
 
-class TopicConfig : public Dialog
+class ApiaiConfig : public Dialog
 {
 public:
-    TopicConfig();
+    ApiaiConfig();
 
     void loadLocalData(const QJsonObject& param);
     void saveLocalData();
@@ -37,11 +37,8 @@ public:
     bool setVar(const QString& name, const QJsonObject& var);
     void getDialog(QJsonObject& newConfig);
 
-    QString m_audioTopic;
-    QString m_decodedSpeechTopic;
-    QString m_ttsCompleteTopic;
-    QString m_managementCommandTopic;
-    QString m_managementResponseTopic;
+    QString m_key;
+    QString m_token;
 };
 
-#endif // _TOPICCONFIG_H
+#endif // _APIAICONFIG_H

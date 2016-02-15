@@ -33,11 +33,15 @@ class RTSRServerClient;
 #define RTSRSERVER_TOPICCONFIG_NAME     "topicConfig"
 #define RTSRSERVER_TOPICCONFIG_DESC     "Configure MQTT topics"
 
+#define RTSRSERVER_APIAICONFIG_NAME     "apiaiConfig"
+#define RTSRSERVER_APIAICONFIG_DESC     "Configure api.ai information"
+
 //  Settings keys
 
 #define RTSRSERVER_PARAMS_TOPIC_GROUP   "RTSRServerTopicGroup"
 #define RTSRSERVER_PARAMS_AUDIO_TOPIC   "audio"
-#define RTSRSERVER_PARAMS_DECODEDSPEECH_TOPIC "decodedSpeech"
+#define RTSRSERVER_PARAMS_DECODEDSPEECH_TOPIC   "decodedSpeech"
+#define RTSRSERVER_PARAMS_TTSCOMPLETE_TOPIC     "ttsComplete"
 
 class SpeechDecoder;
 

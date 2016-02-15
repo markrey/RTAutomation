@@ -26,11 +26,12 @@
 
 #define TAG "Dialog"
 
-Dialog::Dialog(const QString& name, const QString& desc)
+Dialog::Dialog(const QString& name, const QString& desc, int minWidth)
 {
     m_configDialog = false;
     m_name = name;
     m_desc = desc;
+    m_minWidth = minWidth;
 }
 
 void Dialog::clearDialog()
@@ -42,6 +43,7 @@ void Dialog::dialog(QJsonObject& newDialog, bool updateFlag, const QString& cook
 {
     newDialog[RTAUTOMATIONJSON_DIALOG_NAME] = m_name;
     newDialog[RTAUTOMATIONJSON_DIALOG_DESC] = m_desc;
+    newDialog[RTAUTOMATIONJSON_DIALOG_MINWIDTH] = m_minWidth;
     newDialog[RTAUTOMATIONJSON_DIALOG_UPDATE] = updateFlag;
     newDialog[RTAUTOMATIONJSON_DIALOG_COOKIE] = cookie;
     newDialog[RTAUTOMATIONJSON_DIALOG_DATA] = m_varArray;

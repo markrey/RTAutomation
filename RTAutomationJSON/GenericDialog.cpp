@@ -55,7 +55,8 @@ QValidator::State HexValidator::validate(QString &input, int &pos) const
     return QValidator::Invalid;
 }
 
-GenericDialog::GenericDialog(const QString& app, const QString& dialogName, const QString& dialogDesc, const QJsonObject& param, QWidget *parent)
+GenericDialog::GenericDialog(const QString& app, const QString& dialogName, const QString& dialogDesc,
+                             int dialogMinWidth, const QJsonObject& param, QWidget *parent)
     : QDialog(parent, Qt::WindowCloseButtonHint | Qt::WindowTitleHint)
 {
     m_local = false;
@@ -63,6 +64,7 @@ GenericDialog::GenericDialog(const QString& app, const QString& dialogName, cons
     m_app = app;
     m_dialogName = dialogName;
     m_dialogDesc = dialogDesc;
+    m_dialogMinWidth = dialogMinWidth;
     layoutWindow();
     m_getTimer = startTimer(100);
     m_updateTimer = -1;
@@ -84,6 +86,7 @@ GenericDialog::GenericDialog(const QString& app, Dialog *dialog, const QJsonObje
     m_dialog = dialog;
     m_dialogName = dialog->getName();
     m_dialogDesc = dialog->getDesc();
+    m_dialogMinWidth = dialog->getMinWidth();
     m_status = NULL;
     m_param = param;
     setWindowTitle(m_app + " - " + m_dialogDesc);
@@ -233,6 +236,7 @@ void GenericDialog::processDialog()
         return;
 
     m_dialogDesc = m_jsonDialog[RTAUTOMATIONJSON_DIALOG_DESC].toString();
+    m_dialogMinWidth = m_jsonDialog[RTAUTOMATIONJSON_DIALOG_MINWIDTH].toInt();
     m_dialogUpdateFlag = m_jsonDialog[RTAUTOMATIONJSON_DIALOG_UPDATE].toBool();
     m_dialogCookie = m_jsonDialog[RTAUTOMATIONJSON_DIALOG_COOKIE].toString();
     m_varArray = m_jsonDialog[RTAUTOMATIONJSON_DIALOG_DATA].toArray();
@@ -336,7 +340,12 @@ void GenericDialog::layoutDialogWindow()
 {
     int layoutRow = 0;
     bool configEntries = false;
-    int minWidth = 200;
+    int minWidth;
+
+    if (m_dialogMinWidth < 250)
+        minWidth = 250;
+    else
+        minWidth = m_dialogMinWidth;
 
     QLayout *oldLayout = layout();
 
@@ -826,7 +835,7 @@ void GenericDialog::buttonClicked(const QString& dialogName, int row)
         singleUpdate();
         return;
     }
-    GenericDialog dlg(m_app, dialogName, "", param, this);
+    GenericDialog dlg(m_app, dialogName, "", 250, param, this);
 
     m_subDialogMode = true;
     connect(this, SIGNAL(sendSubDialogData(QJsonObject)), &dlg, SLOT(receiveDialogData(QJsonObject)));
